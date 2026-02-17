@@ -1,7 +1,6 @@
 from typing import Any
-import json
+from interfaces import Handle, get_chat_id
 import operator
-from entities import Fault
 import logging
 from entities import Data, Fault
 
@@ -15,7 +14,7 @@ class ProcessData:
         ("product_pressure",  operator.lt,   5.0,  "Low product pressure: {value}"),
         ("pressure",          operator.lt,   5.0,  "Low central pressure: {value}"),
         ("dew_point",         operator.gt, -45.0,  "High dew point: {value}"),
-        ("line",              operator.lt,   5.0,  "Low network pressure: {value}"),
+        ("line",              operator.lt,   5.0,  "Low line pressure: {value}"),
     ]
 
     FLAG_RULES = [
@@ -25,7 +24,7 @@ class ProcessData:
 
     HOSPITAL_RULES = [
         ("pressure", operator.lt, 5.0, "Low pressure: {value}"),
-        ("line",     operator.lt, 5.0, "Low network pressure: {value}"),
+        ("line",     operator.lt, 5.0, "Low line pressure: {value}"),
         ("dew_point", operator.gt, -45.0, "High dew point: {value}"),
     ]
 
@@ -117,7 +116,7 @@ class Handles:
             >>> subject, body = cls._handle_usina_email(data)
         """
        
-        return cls.process_alert(fault)
+        return cls.create_message(fault)
 
     @classmethod
     def _handle_hospital_email(cls, fault: Fault):
@@ -134,10 +133,10 @@ class Handles:
             KeyError: If required keys ("Data" or "Hospital") are missing from the input data.
         """
         
-        return cls.process_alert(fault)
+        return cls.create_message(fault)
 
     @classmethod
-    def process_alert(cls, fault: Fault):
+    def create_message(cls, fault: Fault):
 
         logger.info(f"Issues detected in {fault.hospital} {fault.created_at}: {fault.message}")
 
@@ -149,6 +148,21 @@ class Handles:
 
         return f'ALERT {fault.source} {fault.hospital}', body
 
+
+
 class Telegram:
+
+    def __init__(self, handles: Handle) -> None:
+        self.handles = handles
+
     @staticmethod
     def send_message(chat_id, text) -> None: ...
+
+   
+    def send_fault(self, fault: Fault) -> None:
+        body = self.handles.create_message(fault)
+        try: 
+            chat_id = get_chat_id(fault.hospital)
+            self.send_message(chat_id, body)
+        except:
+            self.send_message(1538185358, body)

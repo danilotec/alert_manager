@@ -1,14 +1,21 @@
 from typing import Set
 from entities import Fault
-from protocols import AlertRepository
+from interfaces import AlertRepository, Sender
 from process import ProcessData
 
 class AlertManager:
 
-    def __init__(self, repository: AlertRepository, timeout_seconds: int = 120):
+    def __init__(self, 
+                 repository: AlertRepository, 
+                
+                 sender: Sender,
+                 timeout_seconds: int = 120):
+        
         self.repository = repository
         self.timeout_seconds = timeout_seconds
         self.active_alerts: Set[Fault] = set()
+        
+        self.sender = sender
 
     def trigger(self, fault: Fault) -> bool:
         """
@@ -20,6 +27,7 @@ class AlertManager:
 
         self.active_alerts.add(fault)
         self.repository.save(fault)
+        self.sender.send_fault(fault)
         return True
 
     def recover(self, fault: Fault) -> bool:
@@ -31,6 +39,7 @@ class AlertManager:
 
         self.active_alerts.remove(fault)
         self.repository.remove(fault)
+        self.sender.send_fault(fault)
         return True
 
     def cleanup_expired(self) -> None:
@@ -44,7 +53,7 @@ class AlertManager:
     def is_active(self, fault: Fault) -> bool:
         return fault in self.active_alerts
     
-
+    
 
 class AlertService:
 

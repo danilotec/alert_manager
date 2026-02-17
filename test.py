@@ -1,8 +1,4 @@
-from entities import Hospital
-from repository import InMemoryAlertRepository
-from alert import AlertManager, AlertService
-from process import Handles, Telegram
-teste =[
+teste = [
     {
     "Hospital":"Joao Machado - Natal/RN",
     "Data":{
@@ -11,7 +7,7 @@ teste =[
         "BE":"Ligado",
         "RST":"Ligado",
         "auto":None,
-        "rede":None,
+        "rede":2,
         "pressure":6,
         "dew_point":None,
         "vacuo":None,
@@ -34,19 +30,12 @@ teste =[
     
     ]
 
-tel = Telegram()
-han = Handles()
-repo = InMemoryAlertRepository(han, tel)
-manager = AlertManager(repo)
-service = AlertService(manager)
 
+if __name__ == '__main__':
+    from pipeline import AlertPipeline
 
-for item in teste:
+    pipe = AlertPipeline()
 
-    hos = Hospital(item)
-    data = hos.central
-    service.process_hospital(data)
-    manager.cleanup_expired()
-    
-        
-
+    for item in teste:
+        pipe.check_hospital(item)
+        print(pipe.repo.storage)
