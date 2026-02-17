@@ -149,3 +149,6 @@ class Handles:
 
         return f'ALERT {fault.source} {fault.hospital}', body
 
+class Telegram:
+    @staticmethod
+    def send_message(chat_id, text) -> None: ...

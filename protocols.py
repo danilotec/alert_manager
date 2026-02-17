@@ -1,0 +1,16 @@
+from typing import Protocol
+from entities import Fault
+
+class AlertRepository(Protocol):
+    def save(self, fault: Fault) -> None: ...
+    def remove(self, fault: Fault) -> None: ...
+
+class handle(Protocol):
+    @classmethod
+    def process_alert(cls, fault: Fault)-> tuple[str, str]: ...
+
+class Sender(Protocol):
+    @staticmethod
+    def send_message(chat_id, text) -> None: ...
+
+def get_chat_id(name): ...

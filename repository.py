@@ -1,22 +1,21 @@
-from typing import Protocol
-from entities import Fault
-
-class AlertRepository(Protocol):
-    def save(self, fault: Fault) -> None: ...
-    def remove(self, fault: Fault) -> None: ...
-
-class handle(Protocol):
-    @classmethod
-    def process_alert(cls, fault: Fault)-> tuple[str, str]: ...
+from protocols import handle, Sender, Fault, get_chat_id
 
 # REPOSITÓRIO EM MEMÓRIA (TESTE)
 class InMemoryAlertRepository:
-    def __init__(self, handles: handle):
+    def __init__(self, handles: handle, sender: Sender):
         self.storage: list[Fault] = []
         self.handles = handles
+        self.sender = sender
 
     def save(self, fault: Fault) -> None:
-        print(self.handles.process_alert(fault))
+        body = self.handles.process_alert(fault)
+
+        try: 
+            chat_id = get_chat_id(fault.hospital)
+            self.sender.send_message(chat_id, body)
+        except:
+            self.sender.send_message(1538185358, body)
+        
         self.storage.append(fault)
 
     def remove(self, fault: Fault) -> None:

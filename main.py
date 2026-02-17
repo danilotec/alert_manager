@@ -1,7 +1,7 @@
 from entities import Hospital
 from repository import InMemoryAlertRepository
 from alert import AlertManager, AlertService
-from process import Handles
+from process import Handles, Telegram
 teste =[
     {
     "Hospital":"Joao Machado - Natal/RN",
@@ -34,9 +34,9 @@ teste =[
     
     ]
 
-
+tel = Telegram()
 han = Handles()
-repo = InMemoryAlertRepository(han)
+repo = InMemoryAlertRepository(han, tel)
 manager = AlertManager(repo)
 service = AlertService(manager)
 

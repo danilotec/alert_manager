@@ -1,6 +1,6 @@
 from typing import Set
 from entities import Fault
-from repository import AlertRepository
+from protocols import AlertRepository
 from process import ProcessData
 
 class AlertManager:
