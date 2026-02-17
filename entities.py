@@ -1,13 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-
-@dataclass
-class Central:
-    name: str
-    data: Data
-
-
 @dataclass
 class Data:
     compressor_1: str | None
@@ -35,6 +28,11 @@ class Data:
             vaccum=payload.get("vacuo"),
             purity=payload.get("purity"),
         )
+
+@dataclass
+class Central:
+    name: str
+    data: Data
 
 class Hospital:
     def __init__(self, payload: dict) -> None:

@@ -62,7 +62,7 @@ class AlertService:
             safe_get=ProcessData._safe_get
         )
 
-        self._handle_faults(faults, data["Hospital"], "Oxygen Plant")
+        self._handle_faults(faults, data.name, "Oxygen Plant")
 
 
     def process_hospital(self, data):
@@ -70,13 +70,13 @@ class AlertService:
 
         faults = ProcessData.generate_fault_objects(
             name="Hospital",
-            hospital=data["Hospital"],
+            hospital=data.name,
             values=hospital_data,
             rules=ProcessData.HOSPITAL_RULES + ProcessData.FLAG_RULES,
             safe_get=ProcessData._safe_get
         )
 
-        self._handle_faults(faults, data["Hospital"], "Hospital")
+        self._handle_faults(faults, data.name, "Hospital")
 
 
     def _handle_faults(self, faults: list[Fault], hospital: str, source: str):

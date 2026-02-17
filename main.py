@@ -1,7 +1,7 @@
 from entities import Hospital
 from repository import InMemoryAlertRepository
 from alert import AlertManager, AlertService
-
+from process import Handles
 teste =[
     {
     "Hospital":"Joao Machado - Natal/RN",
@@ -26,7 +26,7 @@ teste =[
         "RST":None,
         "auto":None,
         "rede":None,
-        "pressure":8.3,
+        "pressure":4.3,
         "dew_point":"-76.5",
         "vacuo":"-530"
         }
@@ -35,17 +35,18 @@ teste =[
     ]
 
 
-
-repo = InMemoryAlertRepository()
+han = Handles()
+repo = InMemoryAlertRepository(han)
 manager = AlertManager(repo)
 service = AlertService(manager)
 
-while True:
-    for item in teste:
 
-        hos = Hospital(item)
-        data = hos.central
-        service.process_hospital(data)
-        manager.cleanup_expired()
+for item in teste:
+
+    hos = Hospital(item)
+    data = hos.central
+    service.process_hospital(data)
+    manager.cleanup_expired()
+    
         
 
