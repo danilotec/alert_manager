@@ -1,4 +1,4 @@
-from interfaces import Fault
+from .interfaces import Fault
 
 # REPOSITÓRIO EM MEMÓRIA (TESTE)
 class InMemoryAlertRepository:

@@ -1,5 +1,5 @@
 from typing import Protocol
-from entities import Fault
+from .entities import Fault
 
 class AlertRepository(Protocol):
     def save(self, fault: Fault) -> None: ...

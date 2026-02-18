@@ -1,7 +1,7 @@
 from typing import Set
-from entities import Fault
-from interfaces import AlertRepository, Sender
-from process import ProcessData
+from .entities import Fault
+from .interfaces import AlertRepository, Sender
+from .process import ProcessData
 
 class AlertManager:
 

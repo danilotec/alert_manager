@@ -1,8 +1,8 @@
 from typing import Any
-from interfaces import Handle, get_chat_id
+from .interfaces import Handle, get_chat_id
 import operator
 import logging
-from entities import Data, Fault
+from .entities import Data, Fault
 
 logger = logging.Logger('__main__')
 
@@ -156,7 +156,8 @@ class Telegram:
         self.handles = handles
 
     @staticmethod
-    def send_message(chat_id, text) -> None: ...
+    def send_message(chat_id, text) -> None:
+        print('mensagem enviada!', text)
 
    
     def send_fault(self, fault: Fault) -> None:

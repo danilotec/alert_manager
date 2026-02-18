@@ -1,7 +1,7 @@
-from entities import Hospital
-from repository import InMemoryAlertRepository
-from alert import AlertManager, AlertService
-from process import Handles, Telegram
+from .entities import Hospital
+from .repository import InMemoryAlertRepository
+from .alert import AlertManager, AlertService
+from .process import Handles, Telegram
 
 class AlertPipeline:
     def __init__(self) -> None:
